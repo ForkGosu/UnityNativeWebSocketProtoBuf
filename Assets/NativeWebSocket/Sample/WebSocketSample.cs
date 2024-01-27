@@ -33,6 +33,17 @@ public class WebSocketSample : MonoBehaviour
     }
 
     public void ReceiveTest(PayloadClassTestEnum _testEnum){
-        Debug.Log(_testEnum.ToString());
+        Debug.Log("최종 payloadClass : "+_testEnum.ToString());
+    }
+
+    public void OnClickTestButton(){
+        SendTest();
+    }
+    public void SendTest(){
+        PayloadClassTestEnum testEnum = new () {
+            UserId = "아이고난"
+        };
+
+        WebSocketManager.Instance?.SendWebSocket(PayloadType.TestEnum, testEnum, "방송 그룹");
     }
 }

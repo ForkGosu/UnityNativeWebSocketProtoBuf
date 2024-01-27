@@ -75,7 +75,7 @@ public class WebSocketManager : MonoBehaviour
             PayloadClass payload = PayloadClass.Parser.ParseFrom(bytes);
             
             // 받은 payload 로그
-            Debug.Log(payload.ToString());
+            Debug.Log("ReceiveMessage : " + payload.ToString());
 
             // Action에 저장된 함수를 통해 메세지 전달
             if(m_messageAction != null){
@@ -150,7 +150,7 @@ public class WebSocketManager : MonoBehaviour
             byte[] packet = payload.ToByteArray();
 
             // 보낼 payload 로그
-            Debug.Log(payload.ToString());
+            Debug.Log("SendMessage : " + payload.ToString());
 
             await m_websocket.Send(packet);
         }
