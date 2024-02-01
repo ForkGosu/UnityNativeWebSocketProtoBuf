@@ -6,6 +6,13 @@ using ProtoBuf.WebSocketPacket;
 
 public class WebSocketSample : MonoBehaviour
 {
+    void OnApplicationPause(bool pause){
+        if(pause) {
+
+        } else {
+
+        }
+    }
     void Awake()
     {
         // 웹소켓 받기

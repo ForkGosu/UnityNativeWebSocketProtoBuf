@@ -24,7 +24,7 @@ public class WebSocketManager : MonoBehaviour
         }
     }
 
-    public string WebSocketUrl = "ws://127.0.0.1:8080";
+    public string WebSocketUrl = "ws://192.168.45.20:28088";
 
     public string ApplicationName = "UnityNativeWebSocketProtoBuf";
     public string ApplicationVersion = "0.0.1";

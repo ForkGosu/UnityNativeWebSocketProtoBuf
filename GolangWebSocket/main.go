@@ -4,12 +4,20 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"websocketTEST/ProtoBuf/WebSocketPacket"
 
 	"github.com/gorilla/websocket"
 	"google.golang.org/protobuf/proto"
 )
+
+type Client struct {
+	conn     *websocket.Conn
+	userUUID string
+}
+
+var clients = make(map[*websocket.Conn]*Client)
 
 var upgrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
@@ -27,10 +35,19 @@ func handleConnection(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("클라이언트 연결됨")
 
+	// 클라이언트 생성
+	client := &Client{
+		conn:     conn,
+		userUUID: "",
+	}
+
+	clients[conn] = client
+
 	for {
 		_, p, err := conn.ReadMessage()
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println("WebSocket Connection Closed:", err)
+			delete(clients, conn)
 			return
 		}
 
@@ -90,13 +107,42 @@ func sendWebSocket(conn *websocket.Conn, payload *WebSocketPacket.PayloadClass) 
 	}
 }
 
-func main() {
+func Goroutine() {
+	fmt.Println("Goroutine Start")
+	payload := &WebSocketPacket.PayloadClass{
+		Device:             "null",
+		ApplicationName:    "null",
+		ApplicationVersion: "null",
+		UserUUID:           "null",
+		RequestCode:        0,
+		ResultMessage:      "Complete",
+		BroadCastGroup:     "0",
+	}
+	number := 1
+	for {
+		time.Sleep(time.Millisecond * 1000) // main 함수 바로 종료 방지
+		number++
+		fmt.Println("!!!! Goroutine Update !!!! : ", number)
+
+		for conn, client := range clients {
+			fmt.Printf("Client UserUUID: %s, RemoteAddr: %s\n", client.userUUID, conn.RemoteAddr())
+
+			// 클라이언트로 응답 데이터 보내기
+			sendWebSocket(conn, payload)
+		}
+	}
+}
+func myWebSocket() {
 	http.HandleFunc("/", handleConnection)
 
-	port := 8080
+	port := 28088
 	fmt.Printf("서버가 %d 포트에서 실행 중입니다...\n", port)
 	err := http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 	if err != nil {
 		fmt.Println(err)
 	}
+}
+func main() {
+	go Goroutine()
+	myWebSocket()
 }
