@@ -50,7 +50,7 @@ public class WebSocketManager : MonoBehaviour
 
         m_websocket.OnOpen += () =>
         {
-            Debug.Log("Connection open!");
+            Debug.Log("Connection open!"+WebSocketUrl);
 
             // 실행 후 다 제거
             if(m_onceAction != null){
@@ -66,7 +66,7 @@ public class WebSocketManager : MonoBehaviour
 
         m_websocket.OnClose += (e) =>
         {
-            Debug.Log("Connection closed!");
+            Debug.Log("Connection closed!"+WebSocketUrl);
         };
 
         // 메세지 받았을 때
