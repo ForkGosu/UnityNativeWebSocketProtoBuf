@@ -1,6 +1,6 @@
 # UnityNativeWebSocketProtoBuf
 
-[Unity 2022.3.18f1]  
+[Unity 2022.3.20f1]  
 
 
 
